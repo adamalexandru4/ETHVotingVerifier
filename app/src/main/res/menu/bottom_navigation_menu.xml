@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="Home"/>
+    <item android:id="@+id/navigation_transactions"
+        android:icon="@drawable/ic_device_hub_black_24dp"
+        android:title="Transactions"/>
+    <item android:id="@+id/navigation_wallet"
+        android:icon="@drawable/ic_account_balance_wallet_black_24dp"
+        android:title="Wallet"/>
+    <item android:id="@+id/navigation_contract"
+        android:icon="@drawable/ic_insert_drive_file_black_24dp"
+        android:title="Contract"/>
+</menu>

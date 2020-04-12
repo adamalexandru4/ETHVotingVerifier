@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -81,7 +82,7 @@ public class CreateWalletActivity extends AppCompatActivity {
                     LinearLayout layoutPassphrase = (LinearLayout)findViewById(R.id.set_passphrase_layout);
                     layoutPassphrase.setVisibility(View.GONE);
 
-                    passphraseEditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                    closeKeyboard(v);
 
                     ProgressBar progressBar = findViewById(R.id.progressBar);
                     progressBar.setVisibility(View.VISIBLE);
@@ -113,6 +114,7 @@ public class CreateWalletActivity extends AppCompatActivity {
         Button startButton = findViewById(R.id.start_button);
         startButton.setOnClickListener(v -> {
             Intent intent = new Intent(CreateWalletActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             onPause();
         });
@@ -242,5 +244,12 @@ public class CreateWalletActivity extends AppCompatActivity {
         // of that it's possible to have another BC implementation loaded in VM.
         Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
         Security.insertProviderAt(new BouncyCastleProvider(), 1);
+    }
+
+    private void closeKeyboard(View view) {
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

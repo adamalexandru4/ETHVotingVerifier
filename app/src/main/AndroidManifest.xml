@@ -16,7 +16,7 @@
         <activity android:name=".wallet.ImportWalletActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".wallet.CreateWalletActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".SplashScreenActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
