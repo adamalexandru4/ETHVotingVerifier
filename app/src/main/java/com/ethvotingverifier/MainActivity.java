@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private BottomNavigationView bottomNavigationView;
     private ContractFragment contractFragment = new ContractFragment();
-    private HomeFragment homeFragment = new HomeFragment();
+    private HomeFragment homeFragment = HomeFragment.newInstance("title1", "subtitle");
     private TransactionsFragment transactionsFragment = new TransactionsFragment();
     private WalletFragment walletFragment = new WalletFragment();
 

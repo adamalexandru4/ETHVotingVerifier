@@ -1,13 +1,18 @@
 package com.ethvotingverifier.wallet;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -54,6 +59,8 @@ import java.util.Map;
 
 public class CreateWalletActivity extends AppCompatActivity {
 
+    private static final int PERMISSION_REQUEST_STORAGE = 1000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +69,10 @@ public class CreateWalletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_wallet);
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_STORAGE);
+        }
 
         Button generateWalletButton = findViewById(R.id.generate_wallet_button);
         generateWalletButton.setOnClickListener(new View.OnClickListener() {
@@ -253,6 +264,16 @@ public class CreateWalletActivity extends AppCompatActivity {
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == PERMISSION_REQUEST_STORAGE) {
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this, "Permission not granted!", Toast.LENGTH_SHORT).show();
         }
     }
 }
