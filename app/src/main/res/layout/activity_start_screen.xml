@@ -4,6 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartScreenActivity">
+    tools:context=".StartScreenActivity"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/custom_background_start">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/audiowide"
+        android:gravity="center_horizontal"
+        android:text="BLOCKCHAIN VOTING VERIFIER"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"
+        android:textColor="#ffff"
+        app:layout_constraintBottom_toTopOf="@+id/startLogo"/>
+
+    <ImageView
+        android:id="@+id/startLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:src="@drawable/sv_logo_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.27" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="75dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/startLogo">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/armata"
+            android:gravity="center_horizontal"
+            android:text="Secure way to interact with the smart contracts"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/create_wallet_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/custom_button_start"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="Create new wallet"
+            android:stateListAnimator="@null"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/import_wallet_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:stateListAnimator="@null"
+            android:text="I already have a wallet >"
+            android:textColor="@android:color/darker_gray" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

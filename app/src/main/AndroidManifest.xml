@@ -9,17 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StartScreenActivity"></activity>
-        <activity android:name=".SplashScreenActivity" />
-        <activity android:name=".wallet.ImportWalletActivity" />
-        <activity android:name=".wallet.CreateWalletActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".StartScreenActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".wallet.ImportWalletActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".wallet.CreateWalletActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity android:name=".SplashScreenActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

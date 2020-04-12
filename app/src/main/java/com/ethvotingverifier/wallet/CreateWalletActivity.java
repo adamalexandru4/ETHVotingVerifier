@@ -8,7 +8,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Pair;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 
 import com.ethvotingverifier.R;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -38,63 +41,110 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Provider;
 import java.security.Security;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateWalletActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_create_wallet);
 
         Button generateWalletButton = findViewById(R.id.generate_wallet_button);
         generateWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ThreadNewWallet runnable = new ThreadNewWallet(v);
-                new Thread(runnable).start();
+                EditText passphraseEditText = findViewById(R.id.passphrase);
+                String passphrase = passphraseEditText.getText().toString();
+                EditText passphraseEditText2 = findViewById(R.id.passphrase2);
+                String confirmPassphrase = passphraseEditText2.getText().toString();
+
+                TextInputLayout textLayout = findViewById(R.id.filledTextField);
+                TextInputLayout confirmTextLayout = findViewById(R.id.filledTextField2);
+
+                Map<String, String> errorMessage = validationMessage(passphrase, confirmPassphrase);
+                if(errorMessage.isEmpty()) {
+                    LinearLayout layoutPassphrase = (LinearLayout)findViewById(R.id.set_passphrase_layout);
+                    layoutPassphrase.setVisibility(View.GONE);
+
+                    passphraseEditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
+                    ProgressBar progressBar = findViewById(R.id.progressBar);
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    ThreadNewWallet runnable = new ThreadNewWallet(v, passphrase);
+                    new Thread(runnable).start();
+                } else {
+                    if(errorMessage.get("passphrase") != null)
+                        textLayout.setError(errorMessage.get("passphrase"));
+                    if(errorMessage.get("confirmpassphrase") != null)
+                        confirmTextLayout.setError(errorMessage.get("confirmpassphrase"));
+                }
             }
         });
+    }
+
+    private Map<String, String> validationMessage(String passphrase, String confirmPassphrase) {
+        Map<String, String> errors = new HashMap<String, String>();
+
+        if(passphrase.isEmpty())
+           errors.put("passphrase", "You should complete the passphrase field");
+        else if(passphrase.length() < 5)
+            errors.put("passphrase", "Minimum length is 5 characters");
+        if(confirmPassphrase.isEmpty())
+            errors.put("confirmpassphrase", "You should complete the confirmation passphrase");
+        else if(!passphrase.equals(confirmPassphrase))
+            errors.put("confirmpassphrase", "Passhphrases are not maching!");
+
+        return errors;
     }
 
     class ThreadNewWallet implements Runnable {
 
         View currentView;
-        public ThreadNewWallet(View v) {
+        String passphrase;
+
+        public Bitmap qrCode;
+        public String walletAddress;
+        public File walletFile;
+
+        public ThreadNewWallet(View v, String passphrase) {
+            this.passphrase = passphrase;
             this.currentView = v;
         }
 
         @Override
         public void run() {
-            LinearLayout layoutPassphrase = findViewById(R.id.set_passphrase_layout);
-            layoutPassphrase.setVisibility(View.GONE);
-            ProgressBar progressBar = findViewById(R.id.progressBar);
-            progressBar.setVisibility(View.VISIBLE);
-
-            EditText passphraseEditText = findViewById(R.id.passphrase);
-            passphraseEditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
-
-            String passphrase = passphraseEditText.getText().toString();
-
             setupBouncyCastle();
-            File walletFile = createNewWallet(currentView, passphrase);
+            walletFile = createNewWallet(currentView, passphrase);
             if(walletFile.exists()) {
                 try {
                     Credentials walletCredentials = WalletUtils.loadCredentials(passphrase, walletFile);
-                    String walletAddress = walletCredentials.getAddress();
+                    walletAddress = walletCredentials.getAddress();
                     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                     try {
                         BitMatrix bitMatrix = multiFormatWriter.encode(walletAddress, BarcodeFormat.QR_CODE,200,200);
                         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                        Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                        qrCode = barcodeEncoder.createBitmap(bitMatrix);
 
-                        ImageView qrCodeImageView = findViewById(R.id.qr_code);
-                        TextView pubAddressTextView = findViewById(R.id.public_address);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ImageView qrCodeImageView = findViewById(R.id.qr_code);
+                                TextView pubAddressTextView = findViewById(R.id.public_address);
 
-                        pubAddressTextView.setText(walletAddress);
-                        qrCodeImageView.setImageBitmap(bitmap);
+                                pubAddressTextView.setText(walletAddress);
+                                qrCodeImageView.setImageBitmap(qrCode);
 
-                        progressBar.setVisibility(View.GONE);
-                        findViewById(R.id.wallet_generated_layout).setVisibility(View.VISIBLE);
+                                ProgressBar progressBar = findViewById(R.id.progressBar);
+                                progressBar.setVisibility(View.GONE);
+                                findViewById(R.id.wallet_generated_layout).setVisibility(View.VISIBLE);
+                            }
+                        });
+
                     } catch (WriterException e) {
                         e.printStackTrace();
                     }

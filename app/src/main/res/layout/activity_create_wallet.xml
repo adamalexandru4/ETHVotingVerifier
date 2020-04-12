@@ -7,7 +7,6 @@
     tools:context=".wallet.CreateWalletActivity"
     android:fitsSystemWindows="true"
     android:background="@drawable/custom_background_start">
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,6 +49,22 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passphrase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filledTextField2"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle"
+            app:errorEnabled="true"
+            android:hint="Confirm passphrase">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passphrase2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
@@ -105,5 +120,4 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
