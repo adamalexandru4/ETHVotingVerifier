@@ -3,12 +3,17 @@ package com.ethvotingverifier.wallet;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -19,7 +24,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ethvotingverifier.MainActivity;
 import com.ethvotingverifier.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -53,6 +60,8 @@ public class CreateWalletActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_create_wallet);
 
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
         Button generateWalletButton = findViewById(R.id.generate_wallet_button);
         generateWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +72,9 @@ public class CreateWalletActivity extends AppCompatActivity {
                 String confirmPassphrase = passphraseEditText2.getText().toString();
 
                 TextInputLayout textLayout = findViewById(R.id.filledTextField);
+                textLayout.setError(null);
                 TextInputLayout confirmTextLayout = findViewById(R.id.filledTextField2);
+                confirmTextLayout.setError(null);
 
                 Map<String, String> errorMessage = validationMessage(passphrase, confirmPassphrase);
                 if(errorMessage.isEmpty()) {
@@ -84,6 +95,26 @@ public class CreateWalletActivity extends AppCompatActivity {
                         confirmTextLayout.setError(errorMessage.get("confirmpassphrase"));
                 }
             }
+        });
+
+        Button copyPublicAddressButton = findViewById(R.id.copy_public_address_button);
+        copyPublicAddressButton.setOnClickListener(v -> {
+            TextView publicAddrETH = findViewById(R.id.public_address);
+            String publicAddress = publicAddrETH.getText().toString();
+
+            ClipData clip = ClipData.newPlainText("ETH Public Address", publicAddress);
+            clipboard.setPrimaryClip(clip);
+
+            Toast toast = Toast.makeText(CreateWalletActivity.this, "Copied public address", Toast.LENGTH_SHORT);
+            toast.setGravity( Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+            toast.show();
+        });
+
+        Button startButton = findViewById(R.id.start_button);
+        startButton.setOnClickListener(v -> {
+            Intent intent = new Intent(CreateWalletActivity.this, MainActivity.class);
+            startActivity(intent);
+            onPause();
         });
     }
 
