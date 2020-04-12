@@ -4,6 +4,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".wallet.ImportWalletActivity">
+    tools:context=".wallet.ImportWalletActivity"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/custom_background_start">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/audiowide"
+        android:gravity="center_horizontal"
+        android:text="BLOCKCHAIN VOTING VERIFIER"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"
+        android:textColor="#ffff"
+        app:layout_constraintBottom_toTopOf="@+id/startLogo"/>
 
+    <ImageView
+        android:id="@+id/startLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:src="@drawable/sv_logo_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.27" />
+
+    <LinearLayout
+        android:id="@+id/set_passphrase_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/startLogo">
+
+
+        <Button
+            android:id="@+id/upload_wallet_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload wallet file"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/wallet_file_content_layout"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            android:hint="Private key encrypted">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/wallet_file_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filledTextField"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle"
+            app:errorEnabled="true"
+            android:hint="Password">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passphrase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/import_wallet_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Import wallet"
+            android:background="@drawable/custom_button_start"
+            android:padding="12dp"
+            android:textColor="@color/white"
+            android:layout_marginBottom="12dp"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

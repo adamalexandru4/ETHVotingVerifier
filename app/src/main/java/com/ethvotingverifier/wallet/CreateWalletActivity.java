@@ -182,7 +182,7 @@ public class CreateWalletActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } catch (IOException | CipherException e) {
-                    showSnackbarWithMargins(Snackbar.make(currentView, e.getMessage(), Snackbar.LENGTH_LONG), 32, 32);
+                    showSnackbarWithMargins(Snackbar.make(currentView, e.getMessage(), Snackbar.LENGTH_SHORT), 32, 32);
                 }
             }
         }
@@ -195,14 +195,17 @@ public class CreateWalletActivity extends AppCompatActivity {
         try {
 
             String fileName = null;
-            File directory = new File(v.getContext().getFilesDir().getAbsolutePath());
+            File directory = new File(Environment.getExternalStorageDirectory() + "/Wallets");
+            if(!directory.exists())
+                directory.mkdir();
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 fileName = WalletUtils.generateLightNewWalletFile(
                         passphrase,
                         directory);
             }
 
-            String path = v.getContext().getFilesDir().getAbsolutePath() + "/" + fileName;
+            String path = Environment.getExternalStorageDirectory() + "/Wallets" + "/" + fileName;
             walletFile = new File(path);
             if(walletFile.exists())
                 statusMessage = "Your wallet file was created successfully";
