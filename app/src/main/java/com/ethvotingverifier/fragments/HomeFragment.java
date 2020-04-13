@@ -9,6 +9,9 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.ethvotingverifier.R;
+import com.ethvotingverifier.models.Wallet;
+
+import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,19 +29,20 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+//    HomeFragmentSelectedListener callback;
+//
+//    public void setOnHomeFragmentSelectedListener(HomeFragmentSelectedListener callback) {
+//        this.callback = callback;
+//    }
+//
+//    public interface HomeFragmentSelectedListener {
+//        void onArticleSelected(int position);
+//    }
+
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -63,8 +67,11 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        TextView titleView = inflatedView.findViewById(R.id.title_fragment);
-        titleView.setText(mParam1);
+        TextView ethAddressTextView = inflatedView.findViewById(R.id.eth_address);
+        ethAddressTextView.setText(Wallet.instance.getAddress());
+
+        TextView ethBalanceTextView = inflatedView.findViewById(R.id.balance_eth);
+        ethBalanceTextView.setText(Wallet.instance.getBalance() + " ETH");
 
         return inflatedView;
     }

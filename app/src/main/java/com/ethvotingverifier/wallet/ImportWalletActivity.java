@@ -27,6 +27,7 @@ import com.ethvotingverifier.MainActivity;
 import com.ethvotingverifier.R;
 import com.ethvotingverifier.SplashScreenActivity;
 import com.ethvotingverifier.StartScreenActivity;
+import com.ethvotingverifier.models.Wallet;
 import com.google.android.material.snackbar.Snackbar;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
@@ -57,7 +58,6 @@ public class ImportWalletActivity extends AppCompatActivity {
 
     private String walletPath;
     private static final int PERMISSION_REQUEST_STORAGE = 1000;
-    public static Credentials credentials;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,13 +120,15 @@ public class ImportWalletActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                ImportWalletActivity.credentials = WalletUtils.loadCredentials(passphrase, walletPath);
+                Credentials credentials = WalletUtils.loadCredentials(passphrase, walletPath);
                 runOnUiThread(() -> {
                     ProgressBar loading = findViewById(R.id.progressBar);
                     loading.setVisibility(View.GONE);
 
                     changeActivityAfterLoading();
                 });
+
+                Wallet.instance.setCredentials(credentials, walletPath);
             }
             catch (Exception e) {
                 runOnUiThread(() -> Toast.makeText(ImportWalletActivity.this, "Failed to load credentials. Check passphrase and wallet file!", Toast.LENGTH_SHORT).show());

@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.WindowManager;
+
+import com.ethvotingverifier.models.Web3;
 
 public class SplashScreenActivity extends AppCompatActivity {
     private static int TIME_OUT = 4000;

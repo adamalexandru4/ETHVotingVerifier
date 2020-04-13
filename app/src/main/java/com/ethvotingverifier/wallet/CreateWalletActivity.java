@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.ethvotingverifier.MainActivity;
 import com.ethvotingverifier.R;
+import com.ethvotingverifier.models.Wallet;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.zxing.BarcodeFormat;
@@ -192,6 +193,8 @@ public class CreateWalletActivity extends AppCompatActivity {
                     } catch (WriterException e) {
                         e.printStackTrace();
                     }
+
+                    Wallet.instance.setCredentials(walletCredentials, walletFile.getPath());
                 } catch (IOException | CipherException e) {
                     showSnackbarWithMargins(Snackbar.make(currentView, e.getMessage(), Snackbar.LENGTH_SHORT), 32, 32);
                 }
