@@ -9,16 +9,19 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -93,6 +96,8 @@ public class ImportWalletActivity extends AppCompatActivity {
                 /*
                 * Another thread, not the UI one
                 */
+                if(walletPath == null)
+                    walletPath = walletFileEditText.getText().toString();
                 ThreadLoadWallet threadLoadWallet = new ThreadLoadWallet(passphrase, walletPath, v);
                 new Thread(threadLoadWallet).start();
 
@@ -120,7 +125,32 @@ public class ImportWalletActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                Credentials credentials = WalletUtils.loadCredentials(passphrase, walletPath);
+                Credentials credentials;
+                String fileName;
+
+                CheckBox keepLogged = findViewById(R.id.keep_logged_checkbox);
+                SharedPreferences sharedPreferences = getSharedPreferences("sharedPref", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                if(WalletUtils.isValidPrivateKey(walletPath)) {
+                    credentials = Credentials.create(walletPath);
+                    if(keepLogged.isChecked()) {
+                        File directory = new File(Environment.getExternalStorageDirectory() + "/Wallets");
+                        fileName = WalletUtils.generateWalletFile(passphrase, credentials.getEcKeyPair(), directory, false);
+                        editor.putString("walletFilePath", Environment.getExternalStorageDirectory() + "/Wallets" + "/" + fileName);
+                    }
+                }
+                else {
+                    credentials = WalletUtils.loadCredentials(passphrase, walletPath);
+                    if(keepLogged.isChecked())
+                        editor.putString("walletFilePath", walletPath);
+                }
+
+                if(keepLogged.isChecked()) {
+                    editor.putString("walletFilePassword", passphrase);
+                    editor.commit();
+                }
+
                 runOnUiThread(() -> {
                     ProgressBar loading = findViewById(R.id.progressBar);
                     loading.setVisibility(View.GONE);

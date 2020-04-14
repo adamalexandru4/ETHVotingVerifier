@@ -6,9 +6,10 @@ import org.web3j.crypto.Keys;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
+import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.security.interfaces.ECKey;
 import java.util.concurrent.ExecutionException;
 
@@ -20,7 +21,7 @@ public class Wallet {
     private ECKeyPair ecKeyPair;
     private String address;
 
-    private BigInteger balance;
+    private BigDecimal balance;
 
     private Wallet() {}
 
@@ -51,12 +52,12 @@ public class Wallet {
         EthGetBalance ethGetBalance = null;
         try {
             ethGetBalance = Web3.instance.getWeb3().ethGetBalance(this.address, DefaultBlockParameterName.LATEST).sendAsync().get();
-            this.balance = ethGetBalance.getBalance();
+            this.balance = Convert.fromWei(ethGetBalance.getBalance().toString(), Convert.Unit.ETHER);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return null;
         }
 
-        return String.valueOf(this.balance.floatValue());
+        return balance.toString();
     }
 }

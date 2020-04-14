@@ -1,4 +1,4 @@
-package com.ethvotingverifier.fragments;
+package com.ethvotingverifier.fragments.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment;
 
 import com.ethvotingverifier.R;
 import com.ethvotingverifier.models.Wallet;
-
-import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.

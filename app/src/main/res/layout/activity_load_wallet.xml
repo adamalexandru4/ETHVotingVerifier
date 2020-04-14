@@ -49,6 +49,7 @@
             android:id="@+id/wallet_file_content_layout"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:errorEnabled="true"
             android:hint="Private key encrypted">
 
@@ -78,6 +79,15 @@
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/keep_logged_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Keep me logged in"
+            android:buttonTint="@color/mediumGray"
+            android:layout_margin="6dp"
+            android:textColor="@color/mediumGray" />
+
         <Button
             android:id="@+id/import_wallet_button"
             android:layout_width="wrap_content"
@@ -92,11 +102,12 @@
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:visibility="gone"
             android:indeterminate="true"
+            android:layout_marginBottom="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

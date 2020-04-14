@@ -8,9 +8,11 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.ethvotingverifier.fragments.ContractFragment;
-import com.ethvotingverifier.fragments.HomeFragment;
-import com.ethvotingverifier.fragments.TransactionsFragment;
-import com.ethvotingverifier.fragments.WalletFragment;
+import com.ethvotingverifier.fragments.home.HomeFragment;
+import com.ethvotingverifier.fragments.HistoryFragment;
+import com.ethvotingverifier.fragments.wallet.WalletFragment;
+import com.ethvotingverifier.fragments.wallet.MainActivityWalletFragmentListener;
+import com.ethvotingverifier.fragments.dialogs.TransactionInfoDialog;
 import com.ethvotingverifier.models.Wallet;
 import com.ethvotingverifier.retrofit.GetDataService;
 import com.ethvotingverifier.retrofit.ResponseEtherScanTransactions;
@@ -20,16 +22,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainActivityWalletFragmentListener {
 
     public static ResponseEtherScanTransactions walletTransactions;
 
     private BottomNavigationView bottomNavigationView;
     private ContractFragment contractFragment = new ContractFragment();
     private HomeFragment homeFragment = new HomeFragment();
-    private TransactionsFragment transactionsFragment = new TransactionsFragment();
+    private HistoryFragment historyFragment = new HistoryFragment();
     private WalletFragment walletFragment = new WalletFragment();
 
     @Override
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         GetDataService getDataService = RetrofitInstance.getInstance().create(GetDataService.class);
 
-        Call<ResponseEtherScanTransactions> allTransactions = getDataService.getAllTransactions("0x92dd3a3F22e8713604fFF872248808C0a574E56D");
+        Call<ResponseEtherScanTransactions> allTransactions = getDataService.getAllTransactions(Wallet.instance.getAddress());
         allTransactions.enqueue(new Callback<ResponseEtherScanTransactions>() {
             @Override
             public void onResponse(Call<ResponseEtherScanTransactions> call, Response<ResponseEtherScanTransactions> response) {
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left, R.anim.enter_left_to_right, R.anim.exit_left_to_right)
-                        .replace(R.id.container_fragment, transactionsFragment)
+                        .replace(R.id.container_fragment, historyFragment)
                         .addToBackStack(null)
                         .commit();
                 return true;
@@ -113,9 +114,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         if(walletFragment.isVisible())
             bottomNavigationView.setSelectedItemId(R.id.navigation_wallet);
-        if(transactionsFragment.isVisible())
+        if(historyFragment.isVisible())
             bottomNavigationView.setSelectedItemId(R.id.navigation_transactions);
         if(contractFragment.isVisible())
             bottomNavigationView.setSelectedItemId(R.id.navigation_contract);
+    }
+
+    @Override
+    public void onWalletTransactionClick(int transactionIndex) {
+
+        TransactionInfoDialog transactionInfoDialog = new TransactionInfoDialog();
+        transactionInfoDialog.show(getSupportFragmentManager(), "Transaction info dialog");
+        //Toast.makeText(this, transactionIndex, Toast.LENGTH_SHORT).show();
     }
 }
