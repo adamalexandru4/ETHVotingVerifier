@@ -2,25 +2,29 @@ package com.ethvotingverifier;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.ethvotingverifier.fragments.ContractFragment;
 import com.ethvotingverifier.fragments.HomeFragment;
 import com.ethvotingverifier.fragments.TransactionsFragment;
 import com.ethvotingverifier.fragments.WalletFragment;
 import com.ethvotingverifier.models.Wallet;
+import com.ethvotingverifier.retrofit.GetDataService;
+import com.ethvotingverifier.retrofit.ResponseEtherScanTransactions;
+import com.ethvotingverifier.retrofit.RetrofitInstance;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    public static ResponseEtherScanTransactions walletTransactions;
 
     private BottomNavigationView bottomNavigationView;
     private ContractFragment contractFragment = new ContractFragment();
@@ -35,10 +39,30 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         setContentView(R.layout.activity_main);
 
+        loadWalletTransactions();
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_home);
 
+    }
+
+    private void loadWalletTransactions() {
+
+        GetDataService getDataService = RetrofitInstance.getInstance().create(GetDataService.class);
+
+        Call<ResponseEtherScanTransactions> allTransactions = getDataService.getAllTransactions("0x92dd3a3F22e8713604fFF872248808C0a574E56D");
+        allTransactions.enqueue(new Callback<ResponseEtherScanTransactions>() {
+            @Override
+            public void onResponse(Call<ResponseEtherScanTransactions> call, Response<ResponseEtherScanTransactions> response) {
+                walletTransactions = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseEtherScanTransactions> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

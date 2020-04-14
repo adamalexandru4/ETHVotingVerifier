@@ -16,8 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.ethvotingverifier.MainActivity;
 import com.ethvotingverifier.R;
+import com.ethvotingverifier.models.Transaction;
 import com.ethvotingverifier.models.Wallet;
+import com.ethvotingverifier.retrofit.ResponseEtherScanTransactions;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +46,9 @@ public class WalletFragment extends Fragment {
 
     String mTitle[] = {"Facebook", "Wapp", "Instagram", "Youtube", "Gmail", "Twitter"};
     String mDescription[] = {"Description 1","Description 2", "Description 1", "Description 1", "Description 1", "Description 1" };
-    int mImages[] = {R.drawable.calendar, R.drawable.question, R.drawable.candidates, R.drawable.choice, R.drawable.choice, R.drawable.choice };
+    int mImages[] = {R.drawable.calendar, R.drawable.question, R.drawable.candidates, R.drawable.choice, R.drawable.choice, R.drawable.choice
+            , R.drawable.choice, R.drawable.choice, R.drawable.choice
+            , R.drawable.choice, R.drawable.choice, R.drawable.choice};
 
     public WalletFragment() {
         // Required empty public constructor
@@ -84,7 +94,7 @@ public class WalletFragment extends Fragment {
         TextView ethBalanceTextView = inflatedView.findViewById(R.id.balance_eth);
         ethBalanceTextView.setText(Wallet.instance.getBalance() + " ETH");
 
-        AdapterListTransactions adapterListTransactions = new AdapterListTransactions(getActivity(), mTitle, mDescription, mImages);
+        AdapterListTransactions adapterListTransactions = new AdapterListTransactions(getActivity(), MainActivity.walletTransactions.getTransactions(), mImages);
         ListView listViewTransactions = inflatedView.findViewById(R.id.list_transactions);
         listViewTransactions.setAdapter(adapterListTransactions);
 
@@ -100,25 +110,22 @@ public class WalletFragment extends Fragment {
         return inflatedView;
     }
 
-    class AdapterListTransactions extends ArrayAdapter<String> {
+    class AdapterListTransactions extends ArrayAdapter<Transaction> {
 
         Context context;
-        String rTitle[];
-        String rDescription[];
+        ArrayList<Transaction> transactions;
         int rImgs[];
 
-        AdapterListTransactions (Context c, String title[], String description[], int imgs[]) {
-            super(c, R.layout.transaction_item_row, R.id.tx_title, title);
+        AdapterListTransactions (Context c, ArrayList<Transaction> transactions, int imgs[]) {
+            super(c, R.layout.transaction_item_row, R.id.tx_title, transactions);
             this.context = c;
-            this.rTitle = title;
-            this.rDescription = description;
+            this.transactions = transactions;
             this.rImgs = imgs;
         }
 
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
             LayoutInflater layoutInflater = (LayoutInflater)getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View row = layoutInflater.inflate(R.layout.transaction_item_row, parent, false);
             ImageView images = row.findViewById(R.id.tx_icon);
@@ -126,8 +133,8 @@ public class WalletFragment extends Fragment {
             TextView myDescription = row.findViewById(R.id.tx_subtitle);
 
             images.setImageResource(rImgs[position]);
-            myTitle.setText(rTitle[position]);
-            myDescription.setText(rDescription[position]);
+            myTitle.setText(transactions.get(position).getHash());
+//            myDescription.setText(rDescription[position]);
 
             return row;
         }
