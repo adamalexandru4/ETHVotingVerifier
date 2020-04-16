@@ -2,16 +2,20 @@ package com.ethvotingverifier;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.ethvotingverifier.election.CheckVoteActivity;
 import com.ethvotingverifier.fragments.ContractFragment;
 import com.ethvotingverifier.fragments.home.HomeFragment;
 import com.ethvotingverifier.fragments.HistoryFragment;
+import com.ethvotingverifier.fragments.home.HomeFragmentListener;
 import com.ethvotingverifier.fragments.wallet.WalletFragment;
-import com.ethvotingverifier.fragments.wallet.MainActivityWalletFragmentListener;
+import com.ethvotingverifier.fragments.wallet.WalletFragmentListener;
 import com.ethvotingverifier.fragments.dialogs.TransactionInfoDialog;
 import com.ethvotingverifier.models.Wallet;
 import com.ethvotingverifier.retrofit.GetDataService;
@@ -23,8 +27,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainActivityWalletFragmentListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
+        WalletFragmentListener, HomeFragmentListener
 
+{
     public static ResponseEtherScanTransactions walletTransactions;
 
     private BottomNavigationView bottomNavigationView;
@@ -75,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         .beginTransaction()
                         .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left, R.anim.enter_left_to_right, R.anim.exit_left_to_right)
                         .replace(R.id.container_fragment, homeFragment)
-                        .addToBackStack(null)
                         .commit();
                 return true;
             case R.id.navigation_contract:
@@ -120,6 +125,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             bottomNavigationView.setSelectedItemId(R.id.navigation_contract);
     }
 
+    /*********** HOME FRAGMENT *********************/
+    @Override
+    public void clickOnCheckVote() {
+        Intent intent = new Intent(MainActivity.this, CheckVoteActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        onPause();
+    }
+
+    /*********** TRANSACTIONS FRAGMENT *************/
     @Override
     public void onWalletTransactionClick(int transactionIndex) {
 
@@ -127,4 +142,5 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         transactionInfoDialog.show(getSupportFragmentManager(), "Transaction info dialog");
         //Toast.makeText(this, transactionIndex, Toast.LENGTH_SHORT).show();
     }
+
 }

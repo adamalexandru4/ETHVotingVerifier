@@ -27,7 +27,7 @@ public class WalletFragment extends Fragment {
     private String mParam2;
 
     View inflatedView = null;
-    private MainActivityWalletFragmentListener mainActivityListener;
+    private WalletFragmentListener mainActivityListener;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -45,8 +45,8 @@ public class WalletFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof MainActivityWalletFragmentListener) {
-            mainActivityListener = (MainActivityWalletFragmentListener) context;
+        if(context instanceof WalletFragmentListener) {
+            mainActivityListener = (WalletFragmentListener) context;
         } else
             throw new RuntimeException(context.toString()
                 + "Must implement MainActivityWalletInterface");
