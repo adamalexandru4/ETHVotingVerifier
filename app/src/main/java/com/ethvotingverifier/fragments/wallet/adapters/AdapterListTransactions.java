@@ -1,4 +1,4 @@
-package com.ethvotingverifier.adapters;
+package com.ethvotingverifier.fragments.wallet.adapters;
 
 
 import android.content.Context;

@@ -14,7 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".election.ScanQrCodeActivity"></activity>
+        <activity android:name=".fragments.settings.activities.StatisticsActivity" />
+        <activity android:name=".fragments.settings.activities.ContractConfigurationActivity" />
+        <activity android:name=".fragments.settings.activities.ContactActivity" />
+        <activity android:name=".election.ScanQrCodeActivity" />
         <activity android:name=".election.CheckVoteActivity" />
         <activity
             android:name=".StartScreenActivity"

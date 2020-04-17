@@ -2,7 +2,6 @@ package com.ethvotingverifier;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,31 +9,38 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.ethvotingverifier.election.CheckVoteActivity;
-import com.ethvotingverifier.fragments.ContractFragment;
+import com.ethvotingverifier.fragments.settings.SettingsFragment;
 import com.ethvotingverifier.fragments.home.HomeFragment;
 import com.ethvotingverifier.fragments.HistoryFragment;
 import com.ethvotingverifier.fragments.home.HomeFragmentListener;
+import com.ethvotingverifier.fragments.settings.activities.ContactActivity;
+import com.ethvotingverifier.fragments.settings.activities.ContractConfigurationActivity;
+import com.ethvotingverifier.fragments.settings.activities.StatisticsActivity;
+import com.ethvotingverifier.fragments.settings.adapters.AdapterListSettingsItems;
 import com.ethvotingverifier.fragments.wallet.WalletFragment;
 import com.ethvotingverifier.fragments.wallet.WalletFragmentListener;
 import com.ethvotingverifier.fragments.dialogs.TransactionInfoDialog;
+import com.ethvotingverifier.models.Election;
 import com.ethvotingverifier.models.Wallet;
 import com.ethvotingverifier.retrofit.GetDataService;
 import com.ethvotingverifier.retrofit.ResponseEtherScanTransactions;
 import com.ethvotingverifier.retrofit.RetrofitInstance;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.web3j.tx.Contract;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-        WalletFragmentListener, HomeFragmentListener
+        WalletFragmentListener, HomeFragmentListener, AdapterListSettingsItems.ClickOnSettingItemListener
 
 {
     public static ResponseEtherScanTransactions walletTransactions;
 
     private BottomNavigationView bottomNavigationView;
-    private ContractFragment contractFragment = new ContractFragment();
+    private SettingsFragment settingsFragment = new SettingsFragment();
     private HomeFragment homeFragment = new HomeFragment();
     private HistoryFragment historyFragment = new HistoryFragment();
     private WalletFragment walletFragment = new WalletFragment();
@@ -44,14 +50,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_main);
+        if(!Election.instance.isElectionDeployed) {
+            Intent intent = new Intent(MainActivity.this, ContractConfigurationActivity.class);
+            intent.putExtra("firstDeploy", true);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         loadWalletTransactions();
 
+        setContentView(R.layout.activity_main);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_home);
-
     }
 
     private void loadWalletTransactions() {
@@ -83,11 +95,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         .replace(R.id.container_fragment, homeFragment)
                         .commit();
                 return true;
-            case R.id.navigation_contract:
+            case R.id.navigation_settings:
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left, R.anim.enter_left_to_right, R.anim.exit_left_to_right)
-                        .replace(R.id.container_fragment, contractFragment)
+                        .replace(R.id.container_fragment, settingsFragment)
                         .addToBackStack(null)
                         .commit();
                 return true;
@@ -121,8 +133,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             bottomNavigationView.setSelectedItemId(R.id.navigation_wallet);
         if(historyFragment.isVisible())
             bottomNavigationView.setSelectedItemId(R.id.navigation_transactions);
-        if(contractFragment.isVisible())
-            bottomNavigationView.setSelectedItemId(R.id.navigation_contract);
+        if(settingsFragment.isVisible())
+            bottomNavigationView.setSelectedItemId(R.id.navigation_settings);
     }
 
     /*********** HOME FRAGMENT *********************/
@@ -143,4 +155,30 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //Toast.makeText(this, transactionIndex, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onItemClick(int position) {
+        Intent intent = null;
+        switch(position) {
+            case 0:
+                intent = new Intent(MainActivity.this, StatisticsActivity.class);
+                break;
+            case 1:
+                intent = new Intent(MainActivity.this, ContractConfigurationActivity.class);
+                break;
+            case 2:
+                intent = new Intent(MainActivity.this, ContactActivity.class);
+                break;
+            case 3:
+                intent = new Intent(MainActivity.this, StartScreenActivity.class);
+                break;
+            default:
+                break;
+        }
+
+        if(intent != null) {
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            onPause();
+        }
+    }
 }

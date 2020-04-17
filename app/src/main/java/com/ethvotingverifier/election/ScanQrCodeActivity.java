@@ -35,7 +35,7 @@ public class ScanQrCodeActivity extends AppCompatActivity implements ZXingScanne
     @Override
     public void handleResult(Result rawResult) {
         Intent intent = new Intent();
-        intent.putExtra("UUID", rawResult.getText());
+        intent.putExtra("result", rawResult.getText());
         setResult(Activity.RESULT_OK, intent);
 
         scannerView.stopCamera();

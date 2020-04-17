@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.ethvotingverifier.MainActivity;
 import com.ethvotingverifier.R;
-import com.ethvotingverifier.adapters.AdapterListTransactions;
+import com.ethvotingverifier.fragments.wallet.adapters.AdapterListTransactions;
 import com.ethvotingverifier.models.Wallet;
 
 public class WalletFragment extends Fragment {
