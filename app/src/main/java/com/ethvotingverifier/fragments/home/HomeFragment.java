@@ -14,34 +14,12 @@ import androidx.fragment.app.Fragment;
 import com.ethvotingverifier.R;
 import com.ethvotingverifier.models.Wallet;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     View inflatedView = null;
     private HomeFragmentListener mainActivityListener;
 
-    private String mParam1;
-    private String mParam2;
-
     public HomeFragment() {
         // Required empty public constructor
-    }
-
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -57,10 +35,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -69,7 +43,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         inflatedView = inflater.inflate(R.layout.fragment_home, container, false);
 
         CardView checkVoteCard = inflatedView.findViewById(R.id.check_vote_card);
+        CardView questionsCard = inflatedView.findViewById(R.id.questions_card);
+        CardView electionInfoCard = inflatedView.findViewById(R.id.election_info_card);
         checkVoteCard.setOnClickListener(this);
+        questionsCard.setOnClickListener(this);
+        electionInfoCard.setOnClickListener(this);
 
         TextView ethAddressTextView = inflatedView.findViewById(R.id.eth_address);
         ethAddressTextView.setText(Wallet.instance.getAddress());
@@ -83,7 +61,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-//        switch(v.getId()) { }
-        mainActivityListener.clickOnCheckVote();
+        switch(v.getId()) {
+            case R.id.check_vote_card:
+                mainActivityListener.clickOnCheckVote();
+                break;
+            case R.id.questions_card:
+                mainActivityListener.clickOnQuestions();
+                break;
+            case R.id.election_info_card:
+                mainActivityListener.clickOnElectionInfo();
+                break;
+        }
     }
 }

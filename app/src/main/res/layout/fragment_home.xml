@@ -64,11 +64,11 @@
 
         <GridLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="380dp"
             android:columnCount="2"
-            android:rowCount="3"
+            android:rowCount="2"
             android:alignmentMode="alignMargins"
-            android:padding="14dp">
+            android:padding="12dp">
             <androidx.cardview.widget.CardView
                 android:id="@+id/check_vote_card"
                 android:background="@color/lightBlue"
@@ -100,6 +100,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
+                android:id="@+id/questions_card"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:background="@color/lightBlue"
                 android:layout_gravity="center"
@@ -130,6 +131,7 @@
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/voters_list_card"
                 android:background="@color/lightBlue"
                 android:layout_gravity="center"
                 android:layout_width="150dp"
@@ -139,36 +141,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 card_view:cardCornerRadius="8dp"
-                card_view:cardElevation="8dp" tools:targetApi="lollipop">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="16dp"
-                        android:src="@drawable/schedule"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="Election dates"
-                        android:textSize="18sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:background="@color/lightBlue"
-                android:layout_gravity="center"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                card_view:cardCornerRadius="8dp"
-                card_view:cardElevation="8dp" tools:targetApi="lollipop">
+                card_view:cardElevation="4dp" tools:targetApi="lollipop">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -187,6 +160,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
+                android:id="@+id/election_info_card"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:background="@color/lightBlue"
                 android:layout_gravity="center"
@@ -197,36 +171,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 card_view:cardCornerRadius="8dp"
-                card_view:cardElevation="8dp" tools:targetApi="lollipop">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="16dp"
-                        android:src="@drawable/setting"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="Central authority"
-                        android:textSize="18sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:background="@color/lightBlue"
-                android:layout_gravity="center"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                card_view:cardCornerRadius="8dp"
-                card_view:cardElevation="8dp" tools:targetApi="lollipop">
+                card_view:cardElevation="4dp" tools:targetApi="lollipop">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

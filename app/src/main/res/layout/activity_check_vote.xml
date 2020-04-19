@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".election.CheckVoteActivity"
+    tools:context=".election.check_vote.CheckVoteActivity"
     android:id="@+id/check_vote_layout"
     android:animateLayoutChanges="true"
     android:background="@drawable/header_election_activity">
@@ -46,7 +46,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/uuid_input"
             android:layout_width="300dp"
-            android:layout_height="75dp"
+            android:layout_height="85dp"
             android:gravity="center"
             android:hint="Insert UUID" />
 
@@ -104,20 +104,120 @@
             android:textColor="#ffffff" />
     </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/check_vote_result"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loading_info"
+        android:layout_below="@+id/check_vote_form_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:gravity="center">
+        <ProgressBar
+            android:id="@+id/loading_questions_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="75dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/lightBlue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/check_vote_form_layout"
-            android:gravity="center"
-            android:layout_marginTop="25dp"
-            android:visibility="visible"
-            android:animateLayoutChanges="true">
+            android:text="Loading from blockchain.."
+            app:layout_constraintTop_toBottomOf="@+id/loading_questions_progress"
+            android:layout_marginTop="8dp"
+            android:gravity="center"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/vote_hash"
-                android:layout_height="25dp"
-                android:layout_width="match_parent" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view_vote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/check_vote_form_layout"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="32dp"
+        android:elevation="16dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/zxing_possible_result_points"
+        app:cardCornerRadius="8dp">
 
-        </LinearLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center"
+                    android:text="Fingerprint"
+                    android:textAllCaps="true"
+                    android:textColor="#121212"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/vote_hash"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:gravity="center"
+                    android:text="EMPTY"
+                    android:textIsSelectable="true" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center"
+                    android:text="Cast at"
+                    android:textAllCaps="true"
+                    android:textColor="#121212"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/cast_at"
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:gravity="center"
+                    android:text="EMPTY" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center"
+                    android:text="Verified at"
+                    android:textAllCaps="true"
+                    android:textColor="#121212"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/verified_at"
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:gravity="center"
+                    android:text="EMPTY" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

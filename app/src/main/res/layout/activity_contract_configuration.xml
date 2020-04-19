@@ -39,16 +39,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
+            android:layout_marginTop="50dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="25dp"
-                android:fontFamily="@font/arimo"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/election_name"
+                android:layout_width="300dp"
+                android:layout_height="75dp"
                 android:gravity="center"
-                android:textAllCaps="true"
-                android:textSize="23dp" />
+                android:maxLines="1"
+                android:inputType="text"
+                android:hint="Election name" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/contract_address_input"

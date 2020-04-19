@@ -1,3 +1,7 @@
-0x6365626237656561313235313438343661666532636463343936313230393435
+0x56495d2a4504c772985dd97ef9258ff4823451b52188045736d1d518b284af2c
 
-0x32379724F739b9e9ebe503340529946E3B371608 -< contract
+0xf6e24baD735EEB5d5A3a0f569132a3f27877c74E -< contract
+
+//                AppDatabase appDatabase = AppDatabase.getInstance(SplashScreenActivity.splashContext);
+//                appDatabase.electionDao().insertQuestionWithAnswers(question1, answers);
+//                List<QuestionWithAnswers> questionWithAnswers = appDatabase.electionDao().getQuestionsWithAnswers();

@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.ethvotingverifier.election.CheckVoteActivity;
+import com.ethvotingverifier.election.InfoElectionActivity;
+import com.ethvotingverifier.election.check_vote.CheckVoteActivity;
+import com.ethvotingverifier.election.questions.QuestionsActivity;
 import com.ethvotingverifier.fragments.settings.SettingsFragment;
 import com.ethvotingverifier.fragments.home.HomeFragment;
 import com.ethvotingverifier.fragments.HistoryFragment;
@@ -26,8 +29,6 @@ import com.ethvotingverifier.retrofit.GetDataService;
 import com.ethvotingverifier.retrofit.ResponseEtherScanTransactions;
 import com.ethvotingverifier.retrofit.RetrofitInstance;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import org.web3j.tx.Contract;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -146,6 +147,22 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         onPause();
     }
 
+    @Override
+    public void clickOnQuestions() {
+        Intent intent = new Intent(MainActivity.this, QuestionsActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        onPause();
+    }
+
+    @Override
+    public void clickOnElectionInfo() {
+        Intent intent = new Intent(MainActivity.this, InfoElectionActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        onPause();
+    }
+
     /*********** TRANSACTIONS FRAGMENT *************/
     @Override
     public void onWalletTransactionClick(int transactionIndex) {
@@ -169,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 intent = new Intent(MainActivity.this, ContactActivity.class);
                 break;
             case 3:
+                SharedPreferences sharedPreferences  = getSharedPreferences("sharedPref", MODE_PRIVATE);
+                sharedPreferences.edit().clear().commit();
+                Election.instance.removeInstance();
                 intent = new Intent(MainActivity.this, StartScreenActivity.class);
                 break;
             default:
