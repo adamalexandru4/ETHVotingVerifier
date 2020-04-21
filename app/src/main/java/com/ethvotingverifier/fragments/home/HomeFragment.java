@@ -45,9 +45,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         CardView checkVoteCard = inflatedView.findViewById(R.id.check_vote_card);
         CardView questionsCard = inflatedView.findViewById(R.id.questions_card);
         CardView electionInfoCard = inflatedView.findViewById(R.id.election_info_card);
+        CardView votersCard = inflatedView.findViewById(R.id.voters_list_card);
         checkVoteCard.setOnClickListener(this);
         questionsCard.setOnClickListener(this);
         electionInfoCard.setOnClickListener(this);
+        votersCard.setOnClickListener(this);
 
         TextView ethAddressTextView = inflatedView.findViewById(R.id.eth_address);
         ethAddressTextView.setText(Wallet.instance.getAddress());
@@ -70,6 +72,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.election_info_card:
                 mainActivityListener.clickOnElectionInfo();
+                break;
+            case R.id.voters_list_card:
+                mainActivityListener.clickOnVoters();
                 break;
         }
     }

@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import com.ethvotingverifier.election.InfoElectionActivity;
 import com.ethvotingverifier.election.check_vote.CheckVoteActivity;
 import com.ethvotingverifier.election.questions.QuestionsActivity;
+import com.ethvotingverifier.election.voters.VotersActivity;
 import com.ethvotingverifier.fragments.settings.SettingsFragment;
 import com.ethvotingverifier.fragments.home.HomeFragment;
 import com.ethvotingverifier.fragments.HistoryFragment;
@@ -104,14 +105,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         .addToBackStack(null)
                         .commit();
                 return true;
-            case R.id.navigation_transactions:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left, R.anim.enter_left_to_right, R.anim.exit_left_to_right)
-                        .replace(R.id.container_fragment, historyFragment)
-                        .addToBackStack(null)
-                        .commit();
-                return true;
+//            case R.id.navigation_transactions:
+//                getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left, R.anim.enter_left_to_right, R.anim.exit_left_to_right)
+//                        .replace(R.id.container_fragment, historyFragment)
+//                        .addToBackStack(null)
+//                        .commit();
+//                return true;
             case R.id.navigation_wallet:
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -132,8 +133,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         if(walletFragment.isVisible())
             bottomNavigationView.setSelectedItemId(R.id.navigation_wallet);
-        if(historyFragment.isVisible())
-            bottomNavigationView.setSelectedItemId(R.id.navigation_transactions);
+//        if(historyFragment.isVisible())
+//            bottomNavigationView.setSelectedItemId(R.id.navigation_transactions);
         if(settingsFragment.isVisible())
             bottomNavigationView.setSelectedItemId(R.id.navigation_settings);
     }
@@ -162,6 +163,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         onPause();
     }
+
+    @Override
+    public void clickOnVoters() {
+        Intent intent = new Intent(MainActivity.this, VotersActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        onPause();
+    }
+
 
     /*********** TRANSACTIONS FRAGMENT *************/
     @Override

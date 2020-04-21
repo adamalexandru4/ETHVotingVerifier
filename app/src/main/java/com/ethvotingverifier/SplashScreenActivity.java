@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends AppCompatActivity implements Election.DeployContractListener {
     private static int TIME_OUT = 4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
             }
         }, TIME_OUT);
+    }
+
+    @Override
+    public void deployContractResult(String message) {
+
     }
 
     public class LoadSavedSettings extends AsyncTask<String, Integer, String> {

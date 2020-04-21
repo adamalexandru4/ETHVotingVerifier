@@ -5,16 +5,22 @@ import android.os.AsyncTask;
 import com.ethvotingverifier.contract.HeliosElection;
 
 import org.bouncycastle.util.encoders.Hex;
+import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthGetCode;
+import org.web3j.protocol.core.methods.response.EthSyncing;
 import org.web3j.tuples.generated.Tuple4;
 import org.web3j.tuples.generated.Tuple5;
 import org.web3j.tuples.generated.Tuple8;
 import org.web3j.tx.gas.DefaultGasProvider;
 import org.web3j.utils.Async;
+import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +51,11 @@ public class Election {
         public void receiveQuestionsFromBlockchain(ArrayList<Tuple5<String, String, String, String, ArrayList<String>>> questions);
     }
 
+    private GetVotersListener getVotersListener;
+    public interface GetVotersListener {
+        public void receiveVotersList(ArrayList<String> voters);
+    }
+
     private GetInformationListener getInformationListener;
     public interface GetInformationListener {
         public void receiveInformationFromBlockchain(Tuple8<String, Boolean, String, String, String, String, String, Boolean> information);
@@ -64,7 +75,10 @@ public class Election {
     public void deployContractAtAddress(String electionName, String contractAddress, DeployContractListener deployContractListener) {
         this.deployContractListener = deployContractListener;
 
-        new DeployContractTask(deployContractListener).execute(electionName, contractAddress);
+        if(deployContractListener == null)
+            deployContractSync(electionName, contractAddress);
+        else
+            new DeployContractTask(deployContractListener).execute(electionName, contractAddress);
     }
 
     public void getVote(String UUID, GetVoteListener getVoteListener) {
@@ -79,10 +93,38 @@ public class Election {
         new GetQuestionsTask(getQuestionsListener).execute();
     }
 
+    public void getVoters(GetVotersListener getVotersListener) {
+        this.getVotersListener = getVotersListener;
+
+        new GetVotersTask(getVotersListener).execute();
+    }
+
     public void getInformation(GetInformationListener getInformationListener) {
         this.getInformationListener = getInformationListener;
 
         new GetInformationTask(getInformationListener).execute();
+    }
+
+    private boolean deployContractSync(String electionName, String contractAddress) {
+        try {
+            heliosElectionWrapper = HeliosElection.load(
+                contractAddress,
+                Web3.instance.getWeb3(),
+                Wallet.instance.getCredentials(), new DefaultGasProvider());
+
+            if (heliosElectionWrapper.name().send().length() > 0) {
+
+                Election.instance.electionName = electionName;
+                Election.instance.contractAddress = contractAddress;
+                Election.instance.isElectionDeployed = true;
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     public static byte[] hexStringToByteArray(String s) {
@@ -115,19 +157,10 @@ public class Election {
             electionName = params[0];
             contractAddress = params[1];
 
-            try {
-                heliosElectionWrapper = HeliosElection.load(
-                        contractAddress,
-                        Web3.instance.getWeb3(),
-                        Wallet.instance.getCredentials(), new DefaultGasProvider());
-
-                Election.instance.electionName = electionName;
-                Election.instance.contractAddress = contractAddress;
-                Election.instance.isElectionDeployed = true;
-            } catch (Exception e) {
-                return "Failed to connect to the deployed contract";
-            }
-            return "Succesfull";
+            if(deployContractSync(electionName, contractAddress))
+                return "Succesfull";
+            else
+                return "Failed to connect to the deployed contract. Check the address";
         }
 
         @Override
@@ -217,6 +250,38 @@ public class Election {
         @Override
         protected void onPostExecute(ArrayList<Tuple5<String, String, String, String, ArrayList<String>>> questions) {
             getQuestionsListener.receiveQuestionsFromBlockchain(questions);
+        }
+    }
+
+    private class GetVotersTask extends AsyncTask<String, Integer, ArrayList<String>> {
+
+        GetVotersListener getVotersListener;
+
+        public GetVotersTask(GetVotersListener getVotersListener) {
+            this.getVotersListener = getVotersListener;
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(String... strings) {
+             ArrayList<byte[]> votersBytes = new ArrayList<>();
+             ArrayList<String> voters = new ArrayList<>();
+
+            try {
+                votersBytes = new ArrayList(heliosElectionWrapper.getVotersUUID().send());
+                for(int i = 0; i < votersBytes.size(); i ++) {
+                    voters.add("0x" + Hex.toHexString(votersBytes.get(i)));
+                }
+                Collections.sort(voters);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return voters;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> voters) {
+            getVotersListener.receiveVotersList(voters);
         }
     }
 

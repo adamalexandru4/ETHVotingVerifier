@@ -58,11 +58,7 @@ public class CheckVoteActivity extends AppCompatActivity implements Election.Get
                 heliosElection.getVote(UUID, this);
                 /*********** HIDE KEYBOARD ***********/
                 InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                View view = this.getCurrentFocus();
-                if (view == null) {
-                    view = new View(this);
-                }
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
 
                 progress.setVisibility(View.VISIBLE);
             } else {

@@ -6,4 +6,6 @@ public interface HomeFragmentListener {
     void clickOnQuestions();
 
     void clickOnElectionInfo();
+
+    void clickOnVoters();
 }

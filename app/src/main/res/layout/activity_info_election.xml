@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".election.VotersActivity"
+    tools:context=".election.voters.VotersActivity"
     android:id="@+id/check_vote_layout"
     android:animateLayoutChanges="true"
     android:background="@drawable/header_election_activity">

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".election.VotersActivity"
+    tools:context=".election.voters.VotersActivity"
     android:id="@+id/check_vote_layout"
     android:animateLayoutChanges="true"
     android:background="@drawable/header_election_activity">
@@ -28,21 +28,20 @@
             android:layout_marginRight="12dp"
             android:fontFamily="@font/armata"
             android:gravity="end|center_vertical"
-            android:text="Questions"
+            android:text="Voters list"
             android:textColor="#ffff"
             android:textSize="32dp" />
 
     </LinearLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/loading_questions"
+        android:id="@+id/loading_voters"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/layout_header"
-        android:visibility="gone"
+        android:visibility="visible"
         android:gravity="center">
         <ProgressBar
-            android:id="@+id/loading_questions_progress"
+            android:id="@+id/loading_voters_progress"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="75dp"
@@ -60,14 +59,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Loading from blockchain.."
-            app:layout_constraintTop_toBottomOf="@+id/loading_questions_progress"
+            app:layout_constraintTop_toBottomOf="@+id/loading_voters_progress"
             android:layout_marginTop="8dp"
             android:gravity="center"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/voters_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         android:layout_below="@+id/layout_header">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/voters_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="22dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:scrollbars="vertical"
+            app:layout_constraintTop_toTopOf="parent"/>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/no_voters_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layout_header"
+        android:visibility="gone"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/no_voters_icon"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/candidates"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="The voters list is empty"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:background="@color/mediumBlue"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/no_voters_icon" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>
