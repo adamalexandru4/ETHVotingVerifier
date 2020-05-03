@@ -19,7 +19,7 @@ import com.ethvotingverifier.fragments.HistoryFragment;
 import com.ethvotingverifier.fragments.home.HomeFragmentListener;
 import com.ethvotingverifier.fragments.settings.activities.ContactActivity;
 import com.ethvotingverifier.fragments.settings.activities.ContractConfigurationActivity;
-import com.ethvotingverifier.fragments.settings.activities.StatisticsActivity;
+import com.ethvotingverifier.fragments.settings.activities.statistics.StatisticsActivity;
 import com.ethvotingverifier.fragments.settings.adapters.AdapterListSettingsItems;
 import com.ethvotingverifier.fragments.wallet.WalletFragment;
 import com.ethvotingverifier.fragments.wallet.WalletFragmentListener;

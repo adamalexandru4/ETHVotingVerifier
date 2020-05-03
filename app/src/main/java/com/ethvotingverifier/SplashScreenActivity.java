@@ -2,20 +2,17 @@ package com.ethvotingverifier;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.ethvotingverifier.database.Answer;
 import com.ethvotingverifier.database.AppDatabase;
-import com.ethvotingverifier.database.Question;
-import com.ethvotingverifier.database.QuestionWithAnswers;
-import com.ethvotingverifier.database.QuestionsDao;
+import com.ethvotingverifier.database.User;
 import com.ethvotingverifier.fragments.settings.activities.ContractConfigurationActivity;
 import com.ethvotingverifier.models.Election;
 import com.ethvotingverifier.models.Wallet;
@@ -25,8 +22,6 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SplashScreenActivity extends AppCompatActivity implements Election.DeployContractListener {
     private static int TIME_OUT = 4000;
@@ -90,6 +85,17 @@ public class SplashScreenActivity extends AppCompatActivity implements Election.
                 }
             }
 
+            try {
+                AppDatabase appDatabase = AppDatabase.getInstance(getApplicationContext());
+                if(appDatabase.votesDao().getUser(credentials.getAddress()) == null) {
+                    User user = new User(credentials.getAddress());
+                    appDatabase.votesDao().insertUser(user);
+                }
+            }
+            catch (Exception e) {
+                return "Error database";
+            }
+
             return "No errors";
         }
 
@@ -98,7 +104,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Election.
             Intent intent = null;
             if(result.equals("No errors")) {
                 intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-            } else if (result.equals("Error wallet")) {
+            } else if (result.equals("Error wallet") || result.equals("Error database")) {
                 Toast.makeText(getApplicationContext(), "Error while loading wallet saved settings", Toast.LENGTH_LONG).show();
                 intent = new Intent(SplashScreenActivity.this, StartScreenActivity.class);
             } else if (result.equals("Error contract")) {

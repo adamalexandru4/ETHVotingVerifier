@@ -33,15 +33,28 @@
                 android:textSize="32dp" />
         </LinearLayout>
 
-        <LinearLayout
+
+
+    <LinearLayout
             android:id="@+id/check_vote_form_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout_header"
         android:animateLayoutChanges="true"
         android:gravity="center_horizontal"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="25dp"
         android:orientation="vertical">
+
+        <Button
+            android:id="@+id/history_button"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/layout_header"
+            android:background="@drawable/custom_button_yellow"
+            android:gravity="center"
+            android:text="HISTORY"
+            android:textColor="#CA1F1F1F"
+            android:layout_marginBottom="25dp"/>
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/uuid_input"

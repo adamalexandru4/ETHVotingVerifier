@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Question.class, Answer.class}, exportSchema = false, version = 2)
+@Database(entities = {User.class, Vote.class}, exportSchema = false, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DB_NAME = "App_DB";
     private static AppDatabase instance;
@@ -21,5 +21,5 @@ public abstract class AppDatabase extends RoomDatabase {
         return instance;
     }
 
-    public abstract QuestionsDao electionDao();
+    public abstract VotesDao votesDao();
 }

@@ -51,6 +51,7 @@ public class CheckVoteActivity extends AppCompatActivity implements Election.Get
         UUID_editText = findViewById(R.id.uuid_input);
         Button checkVoteButton = findViewById(R.id.check_vote);
         Button scanQRCode = findViewById(R.id.scan_qr_code);
+        Button checkHistoryButton = findViewById(R.id.history_button);
 
         checkVoteButton.setOnClickListener(v -> {
             String UUID = UUID_editText.getText().toString();
@@ -68,6 +69,16 @@ public class CheckVoteActivity extends AppCompatActivity implements Election.Get
 
         scanQRCode.setOnClickListener(v -> {
             startActivityForResult(new Intent(this, ScanQrCodeActivity.class), REQUEST_CODE_QR_CODE);
+        });
+
+        checkHistoryButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CheckVoteHistoryActivity.class);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            startActivity(intent);
+            onPause();
+
+            UUID_editText.setText("");
+            cardVote.setVisibility(View.GONE);
         });
 
 
@@ -95,18 +106,23 @@ public class CheckVoteActivity extends AppCompatActivity implements Election.Get
     @Override
     public void receiveVoteFromBlockchain(Tuple4<String, String, String, String> vote) {
 
-        if(vote != null) {
+        Boolean voteIsCorrect = false;
+
+        if(vote != null && !vote.component1().equals("0x0000000000000000000000000000000000000000000000000000000000000000")) {
             /********** SET VALUES ************/
             hashVote.setText(vote.component1());
             castAt.setText(vote.component2());
             verifiedAt.setText(vote.component3());
+            voteIsCorrect = true;
         }
         progress.setVisibility(View.GONE);
 
-        if(vote == null)
+        if(!voteIsCorrect) {
             Toast.makeText(this, "There was an error. Check the UUID.", Toast.LENGTH_SHORT).show();
-        else
+            cardVote.setVisibility(View.GONE);
+        } else
             cardVote.setVisibility(View.VISIBLE);
-
     }
+
+
 }

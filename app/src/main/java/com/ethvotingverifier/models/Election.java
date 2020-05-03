@@ -1,8 +1,12 @@
 package com.ethvotingverifier.models;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.ethvotingverifier.contract.HeliosElection;
+import com.ethvotingverifier.database.AppDatabase;
+import com.ethvotingverifier.database.User;
+import com.ethvotingverifier.database.Vote;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -20,6 +24,7 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +66,10 @@ public class Election {
         public void receiveInformationFromBlockchain(Tuple8<String, Boolean, String, String, String, String, String, Boolean> information);
     }
 
+    public interface CheckVoteHistoryListener {
+        void getVotesFromDB(ArrayList<Vote> votes);
+    }
+
     private Election() {
         web3Instance = Web3.instance;
         walletInstance = Wallet.instance;
@@ -84,7 +93,7 @@ public class Election {
     public void getVote(String UUID, GetVoteListener getVoteListener) {
         this.getVoteListener = getVoteListener;
 
-        new GetVoteTask().execute(UUID);
+        new GetVoteTask((Context) getVoteListener).execute(UUID);
     }
 
     public void getQuestions(GetQuestionsListener getQuestionsListener) {
@@ -175,13 +184,19 @@ public class Election {
 
     private class GetVoteTask extends AsyncTask<String, Integer, Tuple4<String, String, String, String>> {
 
+        private Context context;
+
+        public GetVoteTask(Context context) {
+            this.context = context;
+        }
+
         @Override
         protected Tuple4<String, String, String, String> doInBackground(String... params) {
             String UUID = params[0];
-
-            byte[] uuid_bytes = Election.hexStringToByteArray(UUID.substring(2));
             Tuple4<String, String, String, String> vote_format = null;
+
             try {
+                byte[] uuid_bytes = Election.hexStringToByteArray(UUID.substring(2));
                 Tuple4<byte[], BigInteger, BigInteger, Boolean> vote = heliosElectionWrapper.votes(uuid_bytes).send();
 
                 long milis = vote.component2().longValue();
@@ -191,8 +206,19 @@ public class Election {
                 String verifiedAtString = Election.longToDateTime(milis * 1000);
 
                 vote_format = new Tuple4<>("0x" + Hex.toHexString(vote.component1()), castAtString, verifiedAtString, vote.component4().toString());
+
+                AppDatabase appDatabase = AppDatabase.getInstance(context);
+                User userDB = null;
+                    if((userDB = appDatabase.votesDao().getUser(Wallet.instance.getAddress())) != null) {
+                        Date checkedDate = Calendar.getInstance().getTime();
+                        Vote voteDB = new Vote(vote_format.component1(), vote_format.component2(), vote_format.component3(), vote.component4(), checkedDate);
+
+                        appDatabase.votesDao().insertVote(voteDB, userDB);
+                    }
+
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
 
             return vote_format;
@@ -243,6 +269,7 @@ public class Election {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
             return questions;
         }
