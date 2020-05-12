@@ -22,8 +22,6 @@ import com.ethvotingverifier.fragments.settings.activities.ContractConfiguration
 import com.ethvotingverifier.fragments.settings.activities.statistics.StatisticsActivity;
 import com.ethvotingverifier.fragments.settings.adapters.AdapterListSettingsItems;
 import com.ethvotingverifier.fragments.wallet.WalletFragment;
-import com.ethvotingverifier.fragments.wallet.WalletFragmentListener;
-import com.ethvotingverifier.fragments.dialogs.TransactionInfoDialog;
 import com.ethvotingverifier.models.Election;
 import com.ethvotingverifier.models.Wallet;
 import com.ethvotingverifier.retrofit.GetDataService;
@@ -36,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-        WalletFragmentListener, HomeFragmentListener, AdapterListSettingsItems.ClickOnSettingItemListener
+        HomeFragmentListener, AdapterListSettingsItems.ClickOnSettingItemListener
 
 {
     public static ResponseEtherScanTransactions walletTransactions;
@@ -172,16 +170,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         onPause();
     }
 
-
-    /*********** TRANSACTIONS FRAGMENT *************/
-    @Override
-    public void onWalletTransactionClick(int transactionIndex) {
-
-        TransactionInfoDialog transactionInfoDialog = new TransactionInfoDialog();
-        transactionInfoDialog.show(getSupportFragmentManager(), "Transaction info dialog");
-        //Toast.makeText(this, transactionIndex, Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void onItemClick(int position) {
         Intent intent = null;
@@ -197,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 break;
             case 3:
                 SharedPreferences sharedPreferences  = getSharedPreferences("sharedPref", MODE_PRIVATE);
-                sharedPreferences.edit().clear().commit();
+                sharedPreferences.edit().clear().apply();
                 Election.instance.removeInstance();
                 intent = new Intent(MainActivity.this, StartScreenActivity.class);
                 break;

@@ -34,7 +34,8 @@
                 android:layout_alignParentTop="true"
                 android:text="0x56495d2a4504c772985dd97ef9258ff4823451b52188045736d1d518b284af2c"
                 android:layout_toRightOf="@+id/voter_icon"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp"
+                android:textIsSelectable="true"/>
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

@@ -51,7 +51,7 @@ public class AdapterListTransactions extends ArrayAdapter<Transaction> {
         txValue.setText(transactions.get(position).getValueAsETH());
 
         ImageView images = row.findViewById(R.id.tx_icon);
-        if(transactions.get(position).isSentTransaction("0x92dd3a3F22e8713604fFF872248808C0a574E56D")) {
+        if(transactions.get(position).isSentTransaction(Wallet.instance.getAddress())) {
             images.setImageResource(icons[0]);
             txValue.setTextColor(ContextCompat.getColor(context, R.color.darkRed));
         } else {

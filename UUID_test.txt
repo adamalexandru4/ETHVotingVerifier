@@ -1,7 +1,21 @@
-0x56495d2a4504c772985dd97ef9258ff4823451b52188045736d1d518b284af2c
+0xf6e24baD735EEB5d5A3a0f569132a3f27877c74E -< contract alegeri-senat-atm-2020
+-->
+	0x56495d2a4504c772985dd97ef9258ff4823451b52188045736d1d518b284af2c <- domnuljohnny@gmail.com
+	0xa39bd9e073eff0f3041b65b6324f102f75e4c04e80c5665090902d2516f3d262 <- adamalexandrumihail4@yahoo.com
+	
+------------------------------------------------------------------------------
 
-0xf6e24baD735EEB5d5A3a0f569132a3f27877c74E -< contract
+0x3B3129a91027a1a8753C919c4883eFE841A4876e <- contract testare-alias
+--> 
+	0x21452653099f32a7fcdd7cbd76dc7e8bba4749dd4e1abff15b250e323705c151 <- benadida7
+	
+------------------------------------------------------------------------------
 
-//                AppDatabase appDatabase = AppDatabase.getInstance(SplashScreenActivity.splashContext);
-//                appDatabase.electionDao().insertQuestionWithAnswers(question1, answers);
-//                List<QuestionWithAnswers> questionWithAnswers = appDatabase.electionDao().getQuestionsWithAnswers();
+0x5a7cE308ED7d8F46ba5f1A53B99032d15a402130 <- contract testare-verifier
+
+0x56495d2a4504c772985dd97ef9258ff4823451b52188045736d1d518b284af2c <- domnuljohnny@gmail.com
+0xa39bd9e073eff0f3041b65b6324f102f75e4c04e80c5665090902d2516f3d262 <- adamalexandrumihail4@yahoo.com
+
+
+
+
