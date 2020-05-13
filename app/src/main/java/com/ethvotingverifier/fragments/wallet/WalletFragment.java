@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,6 +20,13 @@ import com.ethvotingverifier.models.Wallet;
 public class WalletFragment extends Fragment {
 
     private View inflatedView = null;
+
+    private String[] filterOption = {"SENT", "RECEIVED", "ALL"};
+    private int filterSelected = 2;
+
+    Button allButton, sentButton, receivedButton;
+
+    private ListView listViewTransactions;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -46,9 +54,41 @@ public class WalletFragment extends Fragment {
         ethBalanceTextView.setText(Wallet.instance.getBalance() + " ETH");
 
         AdapterListTransactions adapterListTransactions = new AdapterListTransactions(getActivity(), MainActivity.walletTransactions.getTransactions());
-        ListView listViewTransactions = inflatedView.findViewById(R.id.list_transactions);
+        listViewTransactions = inflatedView.findViewById(R.id.list_transactions);
         listViewTransactions.setAdapter(adapterListTransactions);
 
+        allButton = inflatedView.findViewById(R.id.all_button);
+        sentButton = inflatedView.findViewById(R.id.sent_button);
+        receivedButton = inflatedView.findViewById(R.id.received_button);
+
+        allButton.setOnClickListener(v -> {
+            changeButtonsBackgroundInactive();
+            allButton.setBackground(getResources().getDrawable(R.drawable.custom_button_outlined));
+            AdapterListTransactions allTransactionsAdapter = new AdapterListTransactions(getActivity(), MainActivity.walletTransactions.getTransactions());
+            listViewTransactions.setAdapter(allTransactionsAdapter);
+        });
+
+        sentButton.setOnClickListener(v -> {
+            changeButtonsBackgroundInactive();
+            sentButton.setBackground(getResources().getDrawable(R.drawable.custom_button_outlined));
+            AdapterListTransactions sentTransactionsAdapter = new AdapterListTransactions(getActivity(), MainActivity.walletTransactions.getSentTransactions());
+            listViewTransactions.setAdapter(sentTransactionsAdapter);
+        });
+
+        receivedButton.setOnClickListener(v -> {
+            changeButtonsBackgroundInactive();
+            receivedButton.setBackground(getResources().getDrawable(R.drawable.custom_button_outlined));
+            AdapterListTransactions receivedTransactionsAdapter = new AdapterListTransactions(getActivity(), MainActivity.walletTransactions.getReceivedTransactions());
+            listViewTransactions.setAdapter(receivedTransactionsAdapter);
+        });
+
+
         return inflatedView;
+    }
+
+    private void changeButtonsBackgroundInactive() {
+        allButton.setBackground(getResources().getDrawable(R.drawable.custom_button_yellow));
+        sentButton.setBackground(getResources().getDrawable(R.drawable.custom_button_yellow));
+        receivedButton.setBackground(getResources().getDrawable(R.drawable.custom_button_yellow));
     }
 }

@@ -63,11 +63,48 @@
                             android:textSize="11dp" />
                     </LinearLayout>
                 </LinearLayout>
+
             </androidx.cardview.widget.CardView>
-                <ListView
-                    android:id="@+id/list_transactions"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+            <ListView
+                android:id="@+id/list_transactions"
+                android:layout_width="match_parent"
+                android:layout_height="330dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/received_button"
+                    android:background="@drawable/custom_button_yellow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="2.5dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="Received"/>
+                <Button
+                    android:id="@+id/all_button"
+                    android:background="@drawable/custom_button_outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="2.5dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="All"/>
+                <Button
+                    android:id="@+id/sent_button"
+                    android:background="@drawable/custom_button_yellow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="2.5dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="SENT"/>
+            </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 </FrameLayout>

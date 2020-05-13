@@ -3,6 +3,7 @@ package com.ethvotingverifier.retrofit;
 import androidx.annotation.NonNull;
 
 import com.ethvotingverifier.models.Transaction;
+import com.ethvotingverifier.models.Wallet;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -53,6 +54,29 @@ public class ResponseEtherScanTransactions {
 
     public ArrayList<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public ArrayList<Transaction> getSentTransactions() {
+
+        ArrayList<Transaction> sentTransactions = new ArrayList<>();
+
+        for(Transaction transaction : transactions) {
+            if(transaction.isSentTransaction(Wallet.instance.getAddress()))
+                sentTransactions.add(transaction);
+        }
+
+        return sentTransactions;
+    }
+
+    public ArrayList<Transaction> getReceivedTransactions() {
+        ArrayList<Transaction> receivedTransactions = new ArrayList<>();
+
+        for(Transaction transaction : transactions) {
+            if(!transaction.isSentTransaction(Wallet.instance.getAddress()))
+                receivedTransactions.add(transaction);
+        }
+
+        return receivedTransactions;
     }
 
     public void setTransactions(ArrayList<Transaction> transactions) {
