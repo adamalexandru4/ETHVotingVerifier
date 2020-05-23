@@ -18,7 +18,7 @@ contract HeliosElection {
     }
 
     string public name;
-    bytes32 public short_name; // for URL
+    bytes32 public short_name;
     bytes32 public pubKey;
 
     address public owner;
@@ -27,11 +27,12 @@ contract HeliosElection {
     mapping(string => bool) public questionsRegistered;
     mapping(uint => Question) public questions;
     uint public noQuestions;
-    
-    mapping(bytes32 => bool) eligibleVoters;
+
+    mapping(bytes32 => bool) public eligibleVoters;
     mapping(bytes32 => Vote) public votes;
     bytes32[] public votersWhoVoted;
 
+    bool public electionIsFinished;
     bool public isElectionPublic;
     uint public createdAt;
     uint public startAt;
@@ -48,6 +49,7 @@ contract HeliosElection {
         name = _name;
         short_name = _short_name;
 
+        electionIsFinished = false;
         isElectionPublic = true;
         serverNodeAddr = _serverNodeAddr;
         noQuestions = 0;
@@ -91,29 +93,29 @@ contract HeliosElection {
         questions[noQuestions].max = _max;
         questions[noQuestions].resultType = _type;
         questions[noQuestions].noAnswers = _answers.length;
-        
+
         for(uint i = 0; i < _answers.length; i ++) {
             questions[noQuestions].answers[i] = _answers[i];
         }
-        
+
         questionsRegistered[_name] = true;
         noQuestions++;
 
     }
-    
+
     function getQuestion(uint256 _questionId) public view returns (string memory _name, int _min, int _max, bytes32 _type, bytes32[] memory _answers) {
-                
+
         Question storage question = questions[_questionId];
-                
+
         bytes32[] memory answers = new bytes32[](question.noAnswers);
-        
+
         for(uint i = 0; i < question.noAnswers; i ++) {
             answers[i] = question.answers[i];
         }
-        
+
         return (question.question, question.min, question.max, question.resultType, answers);
     }
-    
+
 
     function freezeTheElection() public onlyOwner {
         require(!questionsAdded, "All questions have been already added");
@@ -125,6 +127,7 @@ contract HeliosElection {
         publicKeyAdded = true;
     }
 
+
     function setPublicKey(bytes32 _pubKey) public onlyOwner {
         require(!publicKeyAdded, "Public key cannot be modified");
 
@@ -134,10 +137,14 @@ contract HeliosElection {
     function vote(bytes32 _uuid, bytes32 _hash, uint _castAt, uint _verifiedAt) public {
         require(msg.sender == owner || msg.sender == serverNodeAddr, "You are not eligible to register a vote");
 
-        if(!isElectionPublic)
-            require(eligibleVoters[_uuid] == true, "Voter is not eligible to vote");
+        require(!electionIsFinished, "Election is finished!");
 
         require(_castAt < _verifiedAt, "Verification time is not after casting time. You cannot hack it");
+        require(_castAt > startAt, "Vote is not available before starting time");
+        require(_castAt < endAt, "Vote is not available after ending time");
+
+        if(!isElectionPublic)
+            require(eligibleVoters[_uuid] == true, "Voter is not eligible to vote");
 
         if(!votes[_uuid].alreadyVoted)
             votersWhoVoted.push(_uuid);
@@ -151,6 +158,18 @@ contract HeliosElection {
         votes[_uuid] = newVote;
     }
 
+    function stopElection(uint _endAt) public {
+        require(msg.sender == owner || msg.sender == serverNodeAddr, "You are not eligible to stop the election");
+        require(!electionIsFinished, "Election is already stopped!");
+
+        electionIsFinished = true;
+        endAt = _endAt;
+    }
+
+    function destroyContract() public onlyOwner {
+        selfdestruct(payable(owner));
+    }
+
     function getVotersUUID() public view returns(bytes32[] memory) {
         return votersWhoVoted;
     }
@@ -158,4 +177,5 @@ contract HeliosElection {
     function getVote(bytes32 _uuid) public view returns (bytes32 _hash, uint _castAt, uint _verifiedAt)  {
         return (votes[_uuid].hash, votes[_uuid].castAt, votes[_uuid].verifiedAt);
     }
+
 }

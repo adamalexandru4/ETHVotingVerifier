@@ -147,7 +147,7 @@ public class Election {
     }
 
     public static String longToDateTime(long timestamp) {
-        Date date = new Date(timestamp);
+        Date date = new Date(timestamp * 1000);
         DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         return formatter.format(date);
     }
